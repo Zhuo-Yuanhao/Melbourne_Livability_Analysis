@@ -1,0 +1,58 @@
+---
+  # Set up couchdb and cluster
+
+- name: Add nodes to CouchDB cluster
+  no_log: true
+  ansible.builtin.uri:
+    url: http://{{ Masternode }}:5984/_cluster_setup
+    method: POST
+    user: "{{ couchdb_user }}"
+    password: "{{ couchdb_pass }}"
+    force_basic_auth: yes
+    status_code: 200,201
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: "{\"action\": \"enable_cluster\", \"bind_address\": \"0.0.0.0\", \"username\":\"{{ couchdb_user }}\", 
+    \"password\": \"{{ couchdb_pass }}\", \"port\": \"5984\", \"remote_node\": \"{{ inventory_hostname }}\", 
+    \"node_count\": \"{{ couchdb_nodes }}\",\"remote_current_user\": \"{{ couchdb_user }}\", \"remote_current_password\":\"{{ couchdb_pass }}\"}"
+
+# Join nodes to CouchDB cluster
+- name: Join nodes to CouchDB cluster
+  uri:
+    url: http://{{ Masternode }}:5984/_cluster_setup
+    method: POST
+    user: "{{ couchdb_user }}"
+    password: "{{ couchdb_pass }}"
+    force_basic_auth: yes
+    status_code: 200,201
+    headers:
+      Content-Type: "application/json"
+    body_format: json
+    body: "{\"action\":\"add_node\",\"host\":\"{{ inventory_hostname }}\",
+    \"port\":\"5984\",\"username\":\"{{ couchdb_user }}\",\"password\":\"{{ couchdb_pass }}\"}"
+
+# # Empty request to avoid error messages when finishing cluster setup
+# - name: Empty request to avoid error messages when finishing cluster setup
+#   uri:
+#     url: http://{{ Masternode }}:5984/
+#     method: GET
+#     user: "{{ couchdb_user }}"
+#     password: "{{ couchdb_pass }}"
+#     force_basic_auth: yes
+#   run_once: true
+
+# Finish cluster setup
+- name: Finish cluster setup
+  uri:
+    url: http://{{ Masternode }}:5984/_cluster_setup
+    method: POST
+    user: "{{ couchdb_user }}"
+    password: "{{ couchdb_pass }}"
+    force_basic_auth: yes
+    headers:
+      Content-Type: "application/json"
+    status_code: 200,201,500
+    body_format: json
+    body: "{\"action\":\"finish_cluster\"}"    
+  run_once: true

@@ -1,0 +1,42 @@
+- hosts: localhost
+  vars_files:
+    - host_vars/nectar.yaml
+  gather_facts: true
+  vars:
+    - ansible_user: ubuntu
+    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
+    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+  roles:
+    - role: openstack-common
+    - role: openstack-images
+    - role: openstack-volume
+    - role: openstack-security-group
+    - role: openstack-instance
+
+- hosts: DockerDB # install couchdb and docker
+  vars_files:
+    - host_vars/couchdb.yaml
+  gather_facts: true
+  vars:
+    - ansible_user: ubuntu
+    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
+    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  
+  roles:
+    - role: common
+    - role: docker
+    - role: volumes
+    - role: installDB
+
+- hosts: DockerDB:!Masternode # install couchdb and docker
+  vars_files:
+    - host_vars/couchdb.yaml
+  gather_facts: true
+  vars:
+    - ansible_user: ubuntu
+    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
+    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+  
+  roles:
+    - role: clusterDB

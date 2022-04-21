@@ -1,0 +1,23 @@
+---
+volumes:
+  - device: /dev/vdb
+    mountpoint: /var/lib/docker
+  - device: /dev/vdb
+    mountpoint: /data
+
+# CouchDB configuration
+# need to fill up
+CouchDBVERSION: '3.2.1'
+couchdb_user: admin
+couchdb_pass: admin
+couchdb_nodes: 3
+cookie: 'a192aeb9904e6590849337933b000c99'
+# uuid: '5CBC6EFF-45E9-4981-B300-D40782BA0B26'
+
+# Proxy
+proxy_env:
+  no_proxy: localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.u nimelb.edu.au,.cloud.unimelb.edu.au
+  HTTP_PROXY: http://wwwproxy.unimelb.edu.au:8000/
+  HTTPS_PROXY: http://wwwproxy.unimelb.edu.au:8000/
+  http_proxy: http://wwwproxy.unimelb.edu.au:8000/
+  https_proxy: http://wwwproxy.unimelb.edu.au:8000/

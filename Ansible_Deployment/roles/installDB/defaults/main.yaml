@@ -1,0 +1,3 @@
+---
+# Set the first node in in memory inventory to be the masternode of couchDB
+Masternode: "{{ groups['Masternode'][0] }}"
