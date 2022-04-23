@@ -83,7 +83,7 @@ def claw_twitter(acc, city_boundding):
 
      for tweet in tw.filter(locations=lo):
         twitter_to_couchDB(tweet)
-        print("1")
+     
 
 
 
