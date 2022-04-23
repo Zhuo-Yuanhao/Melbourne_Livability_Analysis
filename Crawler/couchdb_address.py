@@ -2,5 +2,5 @@
 host = "172.26.129.242"
 port = "5984"
 username = password = "admin"
-db_name = "demo1"
+db_name = "raw_data"
 
