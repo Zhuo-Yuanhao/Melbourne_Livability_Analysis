@@ -1,8 +1,10 @@
 ---
+# gather facts of remote host
 - name: Gather facts of remote host
   ansible.builtin.setup:
     gather_subset: all
 
+# install dependencies
 - name: Install dependencies
   tags: always
   become: yes
@@ -13,6 +15,7 @@
     update_cache: yes
   environment: "{{ proxy_env }}"
 
+# update pip
 - name: Update pip
   tags: always
   become: yes

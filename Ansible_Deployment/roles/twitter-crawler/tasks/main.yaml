@@ -1,0 +1,22 @@
+---
+# Build Docker image for tweet crawler
+- name: use Dockerfile to build image
+  docker_image:
+    build:
+      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/Crawler/'
+      pull: yes
+    name: tweets-crawler-docker
+    tag: latest
+    source: build
+  become: yes
+  environment: "{{ proxy_env }}"
+
+  # Create new docker container for Twitter crawler and start container
+- name: create and start Twitter Crawler Docker container
+  become: yes
+  docker_container:
+    name: twitter-harvester
+    image: tweets-crawler-docker
+    state: started
+    pull: false
+    recreate: true

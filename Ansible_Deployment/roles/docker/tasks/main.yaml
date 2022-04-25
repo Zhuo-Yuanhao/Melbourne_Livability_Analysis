@@ -1,10 +1,12 @@
 ---
+# uninstall old versions of docker
 - name: Uninstall old versions of docker
   become: yes
   ansible.builtin.apt:
     name: ['docker', 'docker-engine', 'docker.io']
     state: absent
 
+# install dependencies
 - name: Install dependencies
   become: yes
   ansible.builtin.apt:
@@ -14,6 +16,7 @@
     update_cache: yes
   environment: "{{ proxy_env }}"
 
+# add Docker apt repository key
 - name: Add Docker apt repository key
   become: yes
   ansible.builtin.apt_key:
@@ -21,6 +24,7 @@
     state: present
   environment: "{{ proxy_env }}"
 
+# add docker apt repo and update apt cache
 - name: Add Docker apt repository and update apt cache
   become: yes
   ansible.builtin.apt_repository:
@@ -30,6 +34,7 @@
     state: present
   environment: "{{ proxy_env }}"
 
+# install Docker
 - name: Install docker
   become: yes
   ansible.builtin.apt:
@@ -39,6 +44,7 @@
     update_cache: yes
   environment: "{{ proxy_env }}"
 
+# install docker compose
 - name: Install docker-compose
   become: yes
   ansible.builtin.pip:
@@ -46,49 +52,17 @@
     state: latest
   environment: "{{ proxy_env }}"
 
-#   #
-# # Make sure systemd directory exists
-# - name: Make sure that systemd directory exists
-#   file:
-#     path: '/etc/systemd/system'
-#     state: 'directory'
-#     owner: 'root'
-#     group: 'root'
-#     mode: '0777'
-
-# # Make sure docker.service.d directory exists
-# - name: Make sure that docker.service.d directory exists
-#   file:
-#     path: '/etc/systemd/system/docker.service.d'
-#     state: 'directory'
-#     owner: 'root'
-#     group: 'root'
-#     mode: '0755'
-#   become: yes
-
-# # Configure Docker system proxy
-# - name: Configure Docker proxy
-#   template:
-#     src: 'http-proxy.conf.j2'
-#     dest: '/etc/systemd/system/docker.service.d/http-proxy.conf'
-#     owner: 'root'
-#     group: 'root'
-#     mode: '0755'
-#   when: (ansible_service_mgr == 'systemd' and
-#         (proxy_env.http_proxy is defined or proxy_env.https_proxy is defined))
-#   become: yes
-
-# Restart systemd daemons
+# reload config
 - name: Reload systemd daemons
   command: systemctl daemon-reload
   become: yes
 
-# Restart Docker daemon
+# restart docker daemon
 - name: Restart docker daemon
   command: systemctl restart docker
   become: yes
 
-# Restart Docker daemon
+# restart Docker daemon
 - name: Restart docker
   service:
     name: docker

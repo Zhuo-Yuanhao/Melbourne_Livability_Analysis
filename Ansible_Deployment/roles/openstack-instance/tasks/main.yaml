@@ -1,5 +1,6 @@
 ---
-# Create an instance on MRC
+# create an instance on MRC
+
 - name: Create an instance
   openstack.cloud.server:
     name: '{{ item.name }}'
@@ -21,6 +22,14 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
 
+# create ini file
+- name: set ip addresses to inventory file
+  lineinfile:
+    line: "[{{ item.name }}]\n{{ item.ip }}\n"
+    dest: "{{project_working_directory}}"
+  loop: '{{ ip_addresses }}'
+
+# wait for connection
 - name: Wait for connection
   ansible.builtin.wait_for:
     host: "{{ item.openstack.public_v4 }}"
@@ -30,7 +39,7 @@
   loop: '{{ os_instance.results }}'
   when: item.openstack is defined
   
-# Add hosts to Ansible in-memory inventory
+# add hosts to Ansible in-memory inventory
 - name: Add host
   ansible.builtin.add_host:
     name: '{{ item.openstack.public_v4 }}'

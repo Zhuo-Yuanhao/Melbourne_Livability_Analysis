@@ -1,7 +1,6 @@
 ---
-  # Set up couchdb and cluster
-
-- name: Add nodes to CouchDB cluster
+# set Up couchDB cluster
+- name: create couchDB nodes
   no_log: true
   ansible.builtin.uri:
     url: http://{{ Masternode }}:5984/_cluster_setup
@@ -17,9 +16,9 @@
     \"password\": \"{{ couchdb_pass }}\", \"port\": \"5984\", \"remote_node\": \"{{ inventory_hostname }}\", 
     \"node_count\": \"{{ couchdb_nodes }}\",\"remote_current_user\": \"{{ couchdb_user }}\", \"remote_current_password\":\"{{ couchdb_pass }}\"}"
 
-# Join nodes to CouchDB cluster
-- name: Join nodes to CouchDB cluster
-  uri:
+# connect nodes to form couchDB cluster
+- name: connect nodes to form couchDB cluster
+  ansible.builtin.uri:
     url: http://{{ Masternode }}:5984/_cluster_setup
     method: POST
     user: "{{ couchdb_user }}"
@@ -32,19 +31,9 @@
     body: "{\"action\":\"add_node\",\"host\":\"{{ inventory_hostname }}\",
     \"port\":\"5984\",\"username\":\"{{ couchdb_user }}\",\"password\":\"{{ couchdb_pass }}\"}"
 
-# # Empty request to avoid error messages when finishing cluster setup
-# - name: Empty request to avoid error messages when finishing cluster setup
-#   uri:
-#     url: http://{{ Masternode }}:5984/
-#     method: GET
-#     user: "{{ couchdb_user }}"
-#     password: "{{ couchdb_pass }}"
-#     force_basic_auth: yes
-#   run_once: true
-
-# Finish cluster setup
+# finish cluster setup
 - name: Finish cluster setup
-  uri:
+  ansible.builtin.uri:
     url: http://{{ Masternode }}:5984/_cluster_setup
     method: POST
     user: "{{ couchdb_user }}"

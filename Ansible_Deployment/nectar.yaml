@@ -1,42 +1,57 @@
-- hosts: localhost
+- hosts: localhost # set up instance volumn security group and images
   vars_files:
     - host_vars/nectar.yaml
   gather_facts: true
-  vars:
-    - ansible_user: ubuntu
-    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
-    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-
   roles:
-    - role: openstack-common
-    - role: openstack-images
-    - role: openstack-volume
-    - role: openstack-security-group
+    # - role: openstack-common
+    # - role: openstack-images
+    # - role: openstack-volume
+    # - role: openstack-security-group
     - role: openstack-instance
 
-- hosts: DockerDB # install couchdb and docker
-  vars_files:
-    - host_vars/couchdb.yaml
-  gather_facts: true
-  vars:
-    - ansible_user: ubuntu
-    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
-    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+# - hosts: DockerDB # install couchdb and docker on 3 instance execpt frontend instance
+#   vars_files:
+#     - host_vars/couchdb.yaml
+#   gather_facts: true
+#   vars:
+#     - ansible_user: ubuntu
+#     - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
+#     - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
   
-  roles:
-    - role: common
-    - role: docker
-    - role: volumes
-    - role: installDB
+#   roles:
+#     - role: common
+#     - role: docker
+#     - role: volumes
+#     - role: installDB
 
-- hosts: DockerDB:!Masternode # install couchdb and docker
-  vars_files:
-    - host_vars/couchdb.yaml
-  gather_facts: true
-  vars:
-    - ansible_user: ubuntu
-    - ansible_ssh_private_key_file: ~/.ssh/CCC-T43-A2
-    - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
-  
-  roles:
-    - role: clusterDB
+# - hosts: DockerDB:!Masternode # set up couchDB cluster execpt masternode and frontend
+#   vars_files:
+#     - host_vars/couchdb.yaml
+#   gather_facts: true
+#   roles:
+#     - role: clusterDB
+
+# - hosts: instance # clone the github repo to every instances
+#   vars_files:
+#     - host_vars/couchdb.yaml
+#   gather_facts: true
+#   roles:
+#     - role: clone_gitrepo
+
+# - hosts: instance3-data # on Data instance run twitter crawler
+#   vars_files:
+#     - host_vars/couchdb.yaml
+#   gather_facts: true
+
+#   roles:
+#     - role: git-pull # make sure instance have the latest code version
+#     - role: twitter-crawler 
+
+# - hosts: instance2-backend # on Backend instance run backend code
+#   vars_files:
+#     - host_vars/couchdb.yaml
+#   gather_facts: true
+
+#   roles:
+#     - role: git-pull # make sure instance have the latest code version
+#     - role: backend
