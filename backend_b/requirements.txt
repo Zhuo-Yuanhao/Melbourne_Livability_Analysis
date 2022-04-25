@@ -1,5 +1,4 @@
 couchdb
-json
 nltk
 textblob
 re
