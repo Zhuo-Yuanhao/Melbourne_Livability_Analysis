@@ -21,7 +21,7 @@ def trail3():
     return trail3()
 '''
 if __name__ == "__main__":
-    app.run(host='localhost',port=8081)
+    app.run(host='172.26.128.11',port=8081)
 
 '''
 if __name__ == '__main__':
