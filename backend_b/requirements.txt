@@ -1,4 +1,3 @@
 couchdb
 nltk
 textblob
-re
