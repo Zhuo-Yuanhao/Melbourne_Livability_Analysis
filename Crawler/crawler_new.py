@@ -9,6 +9,7 @@ import couchdb #need install
 from couchdb_address import host, port, username, password, db_name #python file connected with couchdb info
 import nltk
 nltk.download('brown')
+nltk.download('punkt')
 from textblob import TextBlob
 
 
