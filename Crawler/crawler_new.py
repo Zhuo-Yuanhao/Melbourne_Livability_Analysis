@@ -8,6 +8,7 @@ from multiprocessing import Process
 import couchdb #need install
 from couchdb_address import host, port, username, password, db_name #python file connected with couchdb info
 import nltk
+nltk.download('brown')
 from textblob import TextBlob
 
 
@@ -94,8 +95,8 @@ def twitter_to_couchDB(t, db=db):
                 if word in vocabulary:
                     infrastructureFlag = True
                     break
-                else:
-                    infrastructureFlag = False
+            else:
+                infrastructureFlag = False
             tweet["infrastructureFlag"] = infrastructureFlag
 
 
