@@ -1,4 +1,5 @@
 import os
+import re
 import json
 from config_4 import config  #python file contains 4 accounts
 from twarc import Twarc  #need install
@@ -6,7 +7,13 @@ import datetime
 from multiprocessing import Process
 import couchdb #need install
 from couchdb_address import host, port, username, password, db_name #python file connected with couchdb info
+import nltk
+from textblob import TextBlob
 
+
+vocabulary=['bank','church','cinema','garden','government','infrastructure','hospital','hotel','library','market'
+    ,'museum','park','square','public','bus','tram','train','water','grid','education','school','post','gas','cellular'
+    ,'pollution','mall','plane','port','harbor','sewage']
 
 
 #this function is for connecting with database in couchdb
@@ -47,10 +54,51 @@ def twitter_to_couchDB(t, db=db):
 
         tweet={}
         tweet["id"] = int(t["_id"])
+
         if "text" in t:
             tweet["text"] = t["text"]
-        if "user" in t:
-            tweet["user"] = t["user"]
+
+            textblob = TextBlob(tweet["text"])
+            emotion = json.loads(textblob.json)[0]['polarity']
+            subject = json.loads(textblob.json)[0]['subjectivity']
+            weightedEmotion = emotion * subject
+            tweet["weightedEmotion"] = weightedEmotion
+
+            num_at = len(re.findall(r'@', tweet["text"]))
+            tweet["num_at"] = num_at
+
+            num_hash = len(re.findall(r'#', tweet["text"]))
+            tweet["num_hash"] = num_hash
+
+            atList = re.findall(r'@[a-zA-Z0-9_.+-]+', tweet["text"])
+            hashList = re.findall(r'#[a-zA-Z0-9_.+-]+', tweet["text"])
+            urlList = re.findall(r'https://t.co/[a-zA-Z0-9_.]+', tweet["text"])
+
+            totalLen = len(tweet["text"])
+            sum = 0
+
+            for element in atList:
+                sum = sum + len(element)
+            for element in hashList:
+                sum = sum + len(element)
+            for element in urlList:
+                sum = sum + len(element)
+
+            meaningfulLen = totalLen - sum
+            tweet["meaningfulLen"] = meaningfulLen
+
+
+            text = tweet["text"].lower()
+            words = text.split()
+            for word in words:
+                if word in vocabulary:
+                    infrastructureFlag = True
+                    break
+                else:
+                    infrastructureFlag = False
+            tweet["infrastructureFlag"] = infrastructureFlag
+
+
         if "lang" in t:
             tweet["lang"] = t["lang"]
         if "created_at" in t:
@@ -83,7 +131,6 @@ def claw_twitter(acc, city_boundding):
 
      for tweet in tw.filter(locations=lo):
         twitter_to_couchDB(tweet)
-     
 
 
 

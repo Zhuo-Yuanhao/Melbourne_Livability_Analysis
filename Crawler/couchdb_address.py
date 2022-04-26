@@ -2,5 +2,5 @@
 host = "172.26.129.242"
 port = "5984"
 username = password = "admin"
-db_name = "raw_data"
+db_name = "new_twitter"
 
