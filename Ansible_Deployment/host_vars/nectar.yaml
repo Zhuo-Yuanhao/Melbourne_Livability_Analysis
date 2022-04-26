@@ -1,10 +1,9 @@
-# Common vars
+# Common variables
 availability_zone: melbourne-qh2-uom
 instance_image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999 # ubuntu 20.04
 instance_key_name: CCC-T43-A2  # ssh key
-instance_flavor: uom.mse.2c9g
-project_working_directory: /Users/xavier/Desktop/CCC/Assignment2/CCC-A2-ansible
-# wm_inventory_file: "./inventory/wm_inventory_file.ini"
+instance_flavor: uom.mse.2c9g # use the 2 cores 9 gb flavor
+project_working_directory: /Users/xavier/Desktop/CCC/Assignment2/CCC2022S1A2-group43/Ansible_Deployment/inventory/hosts.ini
 
 # Volume
 volumes:
@@ -33,6 +32,20 @@ security_groups:
     port_range_min: 1
     port_range_max: 65535
     remote_ip_prefix: 0.0.0.0/0
+  
+  - name: http
+    description: "security group for HTTP"
+    protocol: tcp
+    port_range_min: 80
+    port_range_max: 80
+    remote_ip_prefix: 0.0.0.0/0
+
+  - name: https
+    description: "security group for HTTP"
+    protocol: tcp
+    port_range_min: 443
+    port_range_max: 443
+    remote_ip_prefix: 0.0.0.0/0 
 
 # Instance
 instances:
@@ -40,7 +53,7 @@ instances:
     security_groups: ['ssh']
     volumes: ['vol-1']
   - name: instance2-backend
-    security_groups: ['ssh']
+    security_groups: ['ssh','http','https']
     volumes: ['vol-2']
   - name: instance3-data
     security_groups: ['ssh']
@@ -48,6 +61,7 @@ instances:
   - name: instance4-analysis
     security_groups: ['ssh']
     volumes: [ 'vol-4' ]  
+    
 # Proxy
 proxy_env:
   no_proxy: localhost,127.0.0.1,localaddress,172.16.0.0/12,.melbourne.rc.nectar.org.au,.storage.u nimelb.edu.au,.cloud.unimelb.edu.au

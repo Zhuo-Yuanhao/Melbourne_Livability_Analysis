@@ -1,0 +1,33 @@
+---
+# copy GitHUB ssh key to ubuntu
+- name: copy GitHub Key to instance
+  ansible.builtin.copy:
+    src: "configure/keyGit"
+    dest: /home/ubuntu/.ssh/keyGit
+    owner: ubuntu
+    group: ubuntu
+    backup: no
+    decrypt: yes
+    force: yes
+    mode: 0600
+
+# add GitHub private key
+- name: add GitHub key to instancer
+  template:
+    src: "configure/configure_ssh"
+    dest: /home/ubuntu/.ssh/config
+    owner: ubuntu
+    group: ubuntu
+    mode: 0644
+
+# pull updates from GitHub
+- name: pull from GitHub
+  ansible.builtin.shell:  git pull
+  args:
+    chdir: '{{ git_repo }}'
+
+# remove ssh from ubuntu
+- name: Delete github key from ubuntu
+  file:
+    path: /home/ubuntu/.ssh/GitHubKey
+    state: absent
