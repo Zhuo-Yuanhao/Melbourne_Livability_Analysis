@@ -1,5 +1,4 @@
 twarc
 couchdb
-json
 nltk
 textblob
