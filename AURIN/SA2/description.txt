@@ -1,1 +1,0 @@
-This folder is for processing data from AURIN, and for real-time analysis
