@@ -1,1 +1,1 @@
-This folder is for processing data from AURIN, and for historical data analysis
+This folder is for processing data from AURIN, and for SA3 analysis
