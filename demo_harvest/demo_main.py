@@ -6,9 +6,8 @@ bearer_token = "AAAAAAAAAAAAAAAAAAAAAD1xbgEAAAAASXrPTL92IrSR%2FppXimNnPN5elyA%3D
 
 client = tweepy.Client(bearer_token)
 
-query = 'covid OR covid19 OR good OR terrible OR bad'
-response = client.search_recent_tweets(query=query, max_results=97)
+q = 'covid OR covid19 OR good OR terrible OR bad'
 
-for tweet in response.data:
-        twitter_to_couchDB(tweet)
 
+for tweet in tweepy.Paginator(client.search_recent_tweets, query=q, max_results=100).flatten(limit=20000):
+    twitter_to_couchDB(tweet)
