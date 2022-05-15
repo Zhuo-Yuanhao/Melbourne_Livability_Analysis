@@ -1,0 +1,36 @@
+{"type": "FeatureCollection", 
+    "features": [
+        {"type": "Feature",
+        "properties": {
+            "description": "<strong>Melbourne</strong><p>Education (>= 12 years) Percentile: 95.30% International Resident Percentage: 22.7% Stress Level: 12.4243670764612</p>"
+        }, 
+        "geometry": {
+            "type": "Point", 
+            "coordinates": [144.946457, -37.840935]}
+        }, 
+        {"type": "Feature", 
+        "properties": {
+            "description": "<strong>Sydney</strong><p>Education (>= 12 years) Percentile: 94.98% International Resident Percentage: 34.8% Stress Level: 10.278156288235</p>"
+        },
+        "geometry": {
+            "type": "Point", 
+            "coordinates": [151.209900, -33.865143]}
+        }, 
+        {"type": "Feature", 
+        "properties": {
+            "description": "<strong>Brisbane</strong><p>Education (>= 12 years) Percentile: 91.73% International Resident Percentage: 53.4% Stress Level: 9.78274276043396</p>"
+        },
+        "geometry": {
+            "type": "Point", 
+            "coordinates": [153.021072, -27.470125]}
+        }, 
+        {"type": "Feature", 
+        "properties": {
+            "description": "<strong>Adelaide</strong><p>Education (>= 12 years) Percentile: 91.79% International Resident Percentage: 27.0% Stress Level: 12.8208041434367</p>"
+        },
+        "geometry": {
+            "type": "Point", 
+            "coordinates": [138.599503, -34.921230]}
+        }
+    ]
+}

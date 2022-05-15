@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width", initial-scale="1.0">
+        <title>data visualization</title>
+        <link rel="stylesheet" href="css/index.css">  
+        <!-- render a map with coordinates cnetered at Melbourne -->
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css' rel='stylesheet'/>  
+    </head>
+    <body>
+        <!-- the box of the header -->
+        <header>
+            <div class="container">
+                <h1 class="text-light">Analysis of the livability of Melbourne</h1>
+            </div>
+            <!-- getting the current time and showing at top-right -->
+            <div class="showTime"></div>
+        </header>      
+
+        <!-- The main body of the website --> 
+        <section class="mainbox">
+            <!-- divide the main box into 3 sub-boxes -->
+            <!-- column 1 -->
+            <div class="column">
+
+                <!-- the top panel in column one -->
+                <div class="panel bar-l">
+                    <h2>Tweet emotion distribution analysis</h2>
+                    <div class="chart"></div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+
+                <!-- the middle panel in column one -->
+                <div class="panel bar2">
+                    <h2>Level of social inclusion among residents</h2>
+                    <div class="chart"></div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+
+                <!-- the bottom panel in column one -->
+                <div class="panel pie">
+                    <h2>Avg literal length of tweet VS Local education level</h2>
+                    <div class="chart"></div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+            </div>
+
+            <!-- column 2 -->
+            <div class="column">
+                <div class="panelMap">
+                    <h2>How livable is Melbourne compared to other main capital cities?</h2>
+                    <div id='map'></div> 
+                    <div class='map-overlay' id='legend'><strong>Percentile of people received >= 12 yrs of Education</strong></div>                
+                    <div class="panel-foot"></div>  
+                </div>
+            </div>
+              
+            <!-- column 3 -->
+            <div class="column">
+                <!-- the top panel in column three -->
+                <div class="panel bar-r">
+                    <h2>The analysis of the VIC suburb tweet avg length</h2>
+                    <div class="chart">
+                        <!-- <div class="chartLabel">70 Victoria suburbs with twitter data available</div> -->
+                    </div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+                <!-- the middle panel in column three -->
+                <div class="panel line-r">
+                    <h2>Dynamic daily avg weighted emotion analysis</h2>
+                    <div class="chart"></div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+                <!-- the bottom panel in column three -->
+                <div class="panel bar2-r">
+                    <h2>Resident's attitude about local infrastructure</h2>
+                    <div class="chart"></div>
+                    <!-- another box for the designing on the foot border -->
+                    <div class="panel-foot"></div>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="bg-dark p-5">
+            <div class = 'container'>
+
+            </div>
+            <div class="container">
+                <p>
+                    &copy; Copyright reserved. Designed and developed by <a href="https://www.linkedin.com/in/cheryl-yingxue-chen-9a3143169/">Cheryl Chen</a>
+                    <a href="https://www.linkedin.com/in/fuhan-sun-83a2b2235/">Fuhan Sun</a>
+                    <a href="https://www.linkedin.com/in/yuanhao-zhuo-683720234/">Yuanhao Zhuo</a>
+                    <a href="https://www.linkedin.com/in/haoze-xia-37b265234/">Haoze Xia</a>
+                    <a href="https://www.linkedin.com/in/sibo-xu-21085623a/">Sibo Xu</a> 
+                </p>
+            </div>
+        </footer>
+
+        <!-- make the web content fits the web page size -->
+        <script src="js/flexible.js"></script>
+        
+        <!-- introduce echarts extension into html -->
+        <script src="js/echarts.min.js"></script>
+        <script>
+            // to stringigy the object to enable further analysis
+            var resulComp = "<%= JSON.stringify(result) %>";
+            async function adjust(str) {
+                    return await str.replace(/;/g, "").replace(/&#34/g, "\"");
+            }
+
+            //get view scenario1 data, rate = nonEng/(nonEng+Eng)
+            async function getS1Value(dataset){
+                const value_array = [];
+                for (let i = 0; i<dataset.length; i=i+2){
+                        const total = dataset[i].value + dataset[i+1].value;
+                        const percentage = dataset[i+1].value/total;
+                        value_array.push(percentage);
+                }
+                return value_array;
+            }
+
+            //get view scenario3 social inclusion data
+            async function getS3Value(dataset){
+                const value_array = [];
+                for (let i = 0; i<dataset.length; i=i+2){
+                        const total = dataset[i].value + dataset[i+1].value;
+                        const percentage = dataset[i].value/total;
+                        value_array.push(percentage);
+                }
+                return value_array;
+            }
+
+            //get view scienario4 the education level of residents
+            async function getS4Value(dataset){
+                const value_array = [];
+                dataset.forEach(function (set){
+                        const length = (set.value.sum)/(set.value.count);
+                        value_array.push(length);
+                });
+                return value_array;
+            }
+
+            //get view scienario5 the education level of residents
+            async function getS21orS5Value(dataset){
+                const value_array = [];
+                dataset.forEach(function (set){
+                    value_array.push(set.value);
+                });
+                return value_array;
+            }
+
+            // ===============================================
+            //get view scenario4 for current tweet analysis for each suburb in VIC
+            async function getOotS4ForEachSub(dataset) {
+                const value_array = [];
+                const sub_array = [];
+                var out_arr = [];
+                dataset.forEach(function (set){
+                    var sub_name = set.key[0];
+                    var sub_stats = set.value;
+                    sub_array.push(sub_name);
+                    value_array.push(sub_stats);
+                });
+                out_arr.push(sub_array);
+                out_arr.push(value_array);
+                return out_arr
+            }
+
+            //get view scienario22 label
+            async function getS22ForEachCity(dataset, cityName){
+                const value = {};
+                dataset.forEach(function (set){
+                    if (set.key[0] === cityName){
+                        if (set.key[1] === 4){
+                            const date = set.key[1] + '/' + set.key[2];
+                            value[date] = (set.value.sum) / (set.value.count);
+                        }else if (set.key[1] === 5){
+                            if (set.key[2] !== 2 &&
+                                set.key[2] !==3 &&
+                                set.key[2] !==4 &&
+                                set.key[2] !==5 &&
+                                set.key[2] !==6 &&
+                                set.key[2] !==7 &&
+                                set.key[2] !==8){
+                                const date = set.key[1] + '/' + set.key[2];
+                                value[date] = (set.value.sum) / (set.value.count);
+                            }
+                        }
+                    }
+                });
+                return value;
+            }
+
+
+            // to parse the data into the format that will feed the charts, specifically designed for view scenario5 and scenario2.1
+            async function parseTotalData(viewRawArr) {
+                var total_tweet =[];
+                for (i=0;i<10;i+=3) {
+                    var loc_sum = 0;
+                    for (j=i;j<i+3;j++) {
+                        loc_sum += viewRawArr[j];
+                    }
+                    total_tweet.push(loc_sum);
+                }
+                return total_tweet
+            }
+
+            // to split the raw data array into 3 different arrays to feed the charts, specifically designed for view scenario5 and scenario2.1
+            async function parseArr(viewRawArr, label_arr, total_tweet) {
+                var pos_arr = [];  var neu_arr = []; var neg_arr = []; var out = [];
+                for (i=0;i<3;i++) {
+                    for (j=i; j<label_arr.length; j+=3){
+                        if (i===0) {
+                            neg_arr.push(viewRawArr[j]);
+                        } else if (i===1 ) {
+                            neu_arr.push(viewRawArr[j]);
+                        } else {
+                            pos_arr.push(viewRawArr[j]);
+                        }
+                    }
+                }
+                for (i=0; i<4; i++) {
+                    neg_arr[i] = Math.round((neg_arr[i]/total_tweet[i])*1000)/10;
+                    neu_arr[i] = Math.round((neu_arr[i]/total_tweet[i])*1000)/10;
+                    pos_arr[i] = Math.round((pos_arr[i]/total_tweet[i])*1000)/10;
+                }
+                out.push(neg_arr);
+                out.push(neu_arr);
+                out.push(pos_arr);
+                //console.log(out);
+                return out
+            }
+
+            const label_scenario = ['Adelaide', 'Brisbane', 'Melbourne', 'Sydney'];
+            const label_scenario_detail = ['ADEneg', 'ADEneu', 'ADEpos', 'BRISneg', 'BRISneu', 'BRISpos', 'MELBneg', 'MELBneu', 'MELBpos', 'SYDneg', 'SYDneu', 'SYDpos'];
+
+            async function display(label_scenario, label_scenario_detail){
+                const s1 = await adjust(resulComp);
+                window.data = JSON.parse(s1);
+                
+
+                const s1_value = await getS1Value(data.scenario1);
+                for (i=0; i<s1_value.length; i++) {
+                    s1_value[i] = Math.round(s1_value[i]*1000)/10;
+                }
+                
+                const s3_value = await getS3Value(data.scenario3);
+                for (i=0; i<s3_value.length; i++) {
+                    s3_value[i] = Math.round(s3_value[i]*1000)/10;
+                }
+                const s4_value = await getS4Value(data.scenario4);
+                var s4Pie = [];
+                for (i=0; i<s4_value.length; i++) {
+                    var d = new Object();
+                    d.name = label_scenario[i];
+                    d.value = Math.round(s4_value[i]*100)/100;
+                    s4Pie.push(d);
+                }
+                //console.log(s4Pie);
+
+                //to get data from view scenario4 in another database for the analysis of the vic_suburb tweet
+                const s4_value_oot = await getOotS4ForEachSub(data.oot_scenario4);
+                const sub_name_arr = s4_value_oot[0];
+                const sub_edu_stat_arr = s4_value_oot[1];
+
+                for (i=0;i<sub_edu_stat_arr.length;i++) {
+                    // to get average tweet literal length and assign back to the arr
+                    sub_edu_stat_arr[i] = sub_edu_stat_arr[i].sum / sub_edu_stat_arr[i].count;
+                }
+
+                //people opions about the infrastructure or the public facilities
+                //measure in counts: positive tweet count, neutral tweet count, negative tweet count
+                const s5_value = await getS21orS5Value(data.scenario5);
+                //count total number of tweets in each city
+                const total_tweet_s5 = await parseTotalData(s5_value);
+
+                const threeArr = await parseArr(s5_value, label_scenario_detail, total_tweet_s5);
+                const neg_arr = threeArr[0];
+                const neu_arr = threeArr[1];
+                const pos_arr = threeArr[2];
+
+                
+                // view scenario2.2
+                const s22_value_adl = await getS22ForEachCity(data.scenario22, 'Adelaide');
+                const s22_value_bris = await getS22ForEachCity(data.scenario22, 'Brisbane');
+                const s22_value_melb = await getS22ForEachCity(data.scenario22, 'Melbourne');
+                const s22_value_syd = await getS22ForEachCity(data.scenario22, 'Sydney');
+
+                const s22_label = [];
+                Object.keys(s22_value_adl).forEach((key) => {
+                    s22_label.push(key);
+                });
+
+                const s22_adl = [];
+                Object.keys(s22_value_adl).forEach((key) => {
+                    s22_adl.push(s22_value_adl[key]);
+                });
+
+                const s22_bris = [];
+                Object.keys(s22_value_bris).forEach((key) => {
+                    s22_bris.push(s22_value_bris[key]);
+                });
+
+                const s22_melb = [];
+                Object.keys(s22_value_melb).forEach((key) => {
+                    s22_melb.push(s22_value_melb[key]);
+                });
+
+                const s22_syd = [];
+                Object.keys(s22_value_syd).forEach((key) => {
+                    s22_syd.push(s22_value_syd[key]);
+                });
+
+                // get data from view scenario2.1
+                const s21_value = await getS21orS5Value(data.scenario21);
+                //count total number of tweets in each city
+                const total_tweet_s21 = await parseTotalData(s21_value);
+                const threeArr_s21 = await parseArr(s21_value, label_scenario_detail, total_tweet_s21);
+                const neg_arr_s21 = threeArr_s21[0];
+                const neu_arr_s21 = threeArr_s21[1];
+                const pos_arr_s21 = threeArr_s21[2];
+
+
+                //for scenario1, bar chart 1
+                (function() {
+                    var myChart = echarts.init(document.querySelector('.bar-r .chart'));
+                    var option = {
+                        color: 'rgba(100, 180, 180)',
+                        xAxis: {
+                            type: 'category',
+                            data: sub_name_arr,
+                            show: true,
+                            axisLabel: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            }                 
+                        },
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                            type: 'shadow'
+                            }
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                color: '#fff'
+                            }
+
+                        },
+                        grid: {
+                            left: "0%",
+                            top: "10%",
+                            right: "3%",
+                            bottom: "5%",
+                            containLabel: true
+                        },
+                        series: [
+                            {
+                            data: sub_edu_stat_arr,
+                            type: 'bar',
+                            showBackground: true,
+                            backgroundStyle: {
+                                color: 'rgba(180, 180, 180, 0.2)'
+                            }
+                            }
+                        ]
+                        };
+                        // assign options for an object
+                        myChart.setOption(option);
+                        window.addEventListener('resize', function(){
+                        myChart.resize();
+                    });
+                })();
+
+                //for scenario3, bar chart
+                (function() {
+                        var myChart = echarts.init(document.querySelector('.bar2 .chart'));
+                        var option = {
+                            color: '#ee825d',
+                            tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'shadow'
+                            }
+                        },
+                            xAxis: {
+                                type: 'category',
+                                data: label_scenario,
+                                axisLabel: {
+                                    interval: 0,
+                                    color: '#fff'
+                                }
+                            },
+                            yAxis: {
+                                type: 'value',
+                                axisLabel: {
+                                    interval: 0,
+                                    color: '#fff'
+                                }
+                            },
+                            series: [
+                                {
+                                data: s3_value,
+                                type: 'bar',
+                                showBackground: true,
+                                backgroundStyle: {
+                                    color: '#898f90'
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: "{c}%",
+                                    color: '#f59d7f',
+                                    
+                                }
+                                }
+                            ],
+                            grid: {
+                                left: "0%",
+                                top: "20px",
+                                right: "0%",
+                                bottom: "4%",
+                                containLabel: true
+                            }
+                        };
+                        // assign options for an object
+                        myChart.setOption(option);
+                        window.addEventListener('resize', function(){
+                        myChart.resize();
+                    });
+                })();
+
+               // for scenario4, pie chart
+                (function() {
+                    var myChart = echarts.init(document.querySelector('.pie .chart'));
+                    var option = {
+                        color: ['#1a447f', '#4580d3', '#2760b0', '#a6c8f7'],
+                        tooltip: {
+                        trigger: 'item',
+                        formatter: '{b}<br/> {c}'
+                        },
+                        series: [
+                            {
+                            name: 'Nightingale Chart',
+                            type: 'pie',
+                            radius: ["15%", "70%"],
+                            center: ['50%', '50%'],
+                            roseType: 'radius',
+                            itemStyle: {
+                                borderRadius: 8
+                            },
+                            data: s4Pie,
+                            label: {
+                                fontSize: 10,
+                                fontFamily: 'sans-serif',
+                                color: '#fff'
+                            }
+                            }
+                            
+                        ]
+                        };
+                    // assign options for an object
+                    myChart.setOption(option);
+                    window.addEventListener('resize', function(){
+                    myChart.resize();
+                    });     
+                })();
+        
+
+        // for scenario5, bar chart
+        (function() {
+            var myChart = echarts.init(document.querySelector('.bar2-r .chart'));
+            var option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                    // Use axis to trigger tooltip
+                    type: 'shadow' // 'shadow' as default; can also be 'line' or 'shadow'
+                    }
+                },
+                legend: {
+                    textStyle: {
+                        color: '#fff'
+                    },
+                    top: '5%'
+                },
+                grid: {
+                    left: '3%',
+                    right: '5%',
+                    bottom: '2%',
+                    containLabel: true
+                },
+                xAxis: {
+                    show: false
+                },
+                yAxis: {
+                    type: 'category',
+                    data: label_scenario,
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: "#fff"
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                },
+                series: [
+                    {
+                        name: 'Negative',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: neg_arr,
+                        label: {
+                            show: true,
+                            position: 'inside',
+                            formatter: "{c}%",
+                            color: '#fff',
+                            fontSize: 8                   
+                        },
+                        barCategoryGap: 50,
+                        barWidth: 18,
+                        itemStyle: {
+                            color: "#9377ac"
+                        }
+                    },
+                    {
+                        name: 'Neutral',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: neu_arr,
+                        label: {
+                            show: true,
+                            position: 'inside',
+                            formatter: "{c}%",
+                            color: '#fff',
+                            fontSize: 8                   
+                        },
+                        barCategoryGap: 50,
+                        barWidth: 15,
+                        itemStyle: {
+                            color: "#cb8d1a"
+                        }
+                    },
+                    {
+                        name: 'Positive',
+                        type: 'bar',
+                        stack: 'total',
+                        label: {
+                            show: true
+                        },
+                        emphasis: {
+                            focus: 'series'
+                        },
+                        data: pos_arr,
+                        label: {
+                            show: true,
+                            position: 'inside',
+                            formatter: "{c}%",
+                            color: '#fff',
+                            fontSize: 8                
+                        },
+                        barCategoryGap: 50,
+                        barWidth: 15,
+                        itemStyle: {
+                            color: "#83bb68"
+                        }
+                    },
+                ]
+                };
+            // assign options for an object
+            myChart.setOption(option);
+            window.addEventListener('resize', function(){
+                myChart.resize();
+            });
+        })();
+
+        //for scenario2.1, bar chart
+        (function() {
+            var myChart = echarts.init(document.querySelector('.bar-l .chart'));
+            var option = {
+                grid: {
+                    left: '3%',
+                    right: '5%',
+                    top: '18%',
+                    bottom: '2%',
+                    containLabel: true
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                    type: 'shadow'
+                    }
+                },
+                legend: {
+                    align: 'left',
+                    orient: 'horizontal',
+                    top: '2%',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 10
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    axisTick: { show: false },
+                    data: label_scenario,
+                    axisLabel: {
+                    color: "#fff",
+                    fontSize: 10
+                    }
+                },
+                yAxis: 
+                    {
+                    type: 'value',
+                    color: '#fff',
+                    axisLabel: {
+                    color: "#fff",
+                    fontSize: 10
+                    }
+                    },
+                series: [
+                    {
+                    name: 'Negative',
+                    type: 'bar',
+                    barGap: 0,
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: "{c}%",
+                        color: '#fff',
+                        fontSize: 7  
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: neg_arr_s21,
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: '#667375'
+                    }
+                    },
+                    {
+                    name: 'Neural',
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: "{c}%",
+                        color: '#fff',
+                        fontSize: 7  
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: neu_arr_s21,
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: '#667375'
+                    }
+                    },
+                    {
+                    name: 'Positive',
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        position: 'top',
+                        formatter: "{c}%",
+                        color: '#fff',
+                        fontSize: 7  
+                    },
+                    emphasis: {
+                        focus: 'series'
+                    },
+                    data: pos_arr_s21,
+                    showBackground: true,
+                    backgroundStyle: {
+                        color: '#667375'
+                    }
+                    },
+                ]
+            };
+            // assign options for an object
+            myChart.setOption(option);
+            window.addEventListener('resize', function(){
+                myChart.resize();
+            });
+        })();
+
+        //for scenario2.2, line chart
+        (function() {
+            var myChart = echarts.init(document.querySelector('.line-r .chart'));
+            var option = {
+                color: ['#256174', '#3292b8', '#6eb496', '#9698ed'],
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    align: 'left',
+                    orient: 'horizontal',
+                    top: '2%',
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 10
+                    },
+                    icon: 'pin'
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    top: '20%',
+                    containLabel: true
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: s22_label,
+                    axisTick: {
+                        show: false
+                    },
+                    axisLabel: {
+                        color: "#fff"
+                    },
+                    axisLine: {
+                        show: false
+                    }
+                },
+                yAxis: {
+                    type: 'value',
+                    axisLabel: {
+                        color: "#fff"
+                    },
+                },
+                series: [
+                    {
+                        name: 'Adelaide',
+                        type: 'line',
+                        stack: 'Total',
+                        data: s22_adl
+                    },
+                    {
+                        name: 'Brisbane',
+                        type: 'line',
+                        stack: 'Total',
+                        data: s22_bris
+                    },
+                    {
+                        name: 'Melbourne',
+                        type: 'line',
+                        stack: 'Total',
+                        data: s22_melb
+                    },
+                    {
+                        name: 'Sydney',
+                        type: 'line',
+                        stack: 'Total',
+                        data: s22_syd
+                    },
+                ]
+            };
+            // assign options for an object
+            myChart.setOption(option);
+            window.addEventListener('resize', function(){
+                myChart.resize();
+            });
+        })();
+
+
+    };
+
+        display(label_scenario, label_scenario_detail);
+        </script>
+        <!-- import timer -->
+        <script src="js/timer.js"></script>
+        
+        <script src="js/AusMap.js"></script>
+        
+        <script src="app.js"></script>
+        
+    </body>
+</html>
+
