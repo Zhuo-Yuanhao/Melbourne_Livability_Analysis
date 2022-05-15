@@ -1,0 +1,250 @@
+// css initiaion
+* {
+    margin: 0;
+    padding-left: .025rem;
+    padding-top: .025rem;
+    padding-bottom: .025rem;
+    padding-right: .025rem;
+    box-sizing: border-box;
+}
+body {
+    background-color: black;
+    //height: 18.75rem;
+    width: 100%;
+    background-position: center, center;
+    background-size: cover;
+  }
+header {
+    position: relative;
+    height: 1rem;
+    background-color: black;
+    h1 {
+        font-style: normal;
+        font-size: 0.4rem;
+        color: white;
+        text-align: left;
+        line-height: 0.8rem;
+    }
+    .showTime {
+        position: absolute;   
+        right: .025rem;
+        top: 0;
+        font-style: normal;
+        line-height: 0.8rem;
+        color: white;
+        font-size: 0.2rem;
+    }
+  }
+footer {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    height: .3rem;
+    // .container {
+    //     text-align: center;
+    //     color: white;
+    // }//margin-top: .3rem;
+   p {
+        padding-bottom: .25rem;
+        font-style: normal;
+        font-size: .2rem;
+        color: white;
+        text-align: center;
+        line-height: .2rem;
+        a {
+            font-style: normal;
+            color: grey;
+        }
+    }
+  }
+.mainbox {
+      display: flex;
+      min-width: 1024px;
+      max-width: 1920px;
+      margin: 0;
+      padding: .125rem .125rem 0;
+      //height:2000px;
+      //background-color: white;
+      .column {
+          flex: 2; 
+      }
+      .column:nth-child(2) {
+        flex: 6;
+        margin-bottom: .1875rem;
+        margin-left: .125rem ;
+        margin-right: .125rem ;
+    }
+    .panel {
+        position: relative;
+        height: 3.5rem;
+        padding: 0 .1875rem .5rem;
+        margin-bottom: .1875rem;
+        background-color:   rgba(107, 107, 107, 0.3);
+        //opacity: 0.5;
+        
+        
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid rgba(107, 107, 107, 0.3);
+            border-left: 2px solid rgba(107, 107, 107, 0.3);
+            content: "";
+        }
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid rgba(107, 107, 107, 0.3);
+            border-right: 2px solid rgba(107, 107, 107, 0.3);
+            content: "";
+        }
+        .panel-foot {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            &::before {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 10px;
+                height: 10px;
+                border-bottom: 2px solid rgba(107, 107, 107, 0.3);
+                border-left: 2px solid rgba(107, 107, 107, 0.3);
+                content: "";
+            }
+            &::after {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 10px;
+                height: 10px;
+                border-bottom: 2px solid rgba(107, 107, 107, 0.3);
+                border-right: 2px solid rgba(107, 107, 107, 0.3);
+                content: "";
+            }
+
+        }
+        h2 {
+            height: .6rem;
+            color: white;
+            line-height: .6rem;
+            text-align: center;
+            font-size: .1875rem;
+            font-weight: 300;
+        }
+        .chart {
+            height: 2.75rem;
+            background-color:  rgba(107, 107, 107, 0.3);
+            opacity: 1;
+        }
+    }
+    .panelMap {
+        position: relative;
+        height: 10.875rem;
+        padding: 0 .1875rem .75rem;
+        margin-bottom: .1875rem;
+        background-color: rgba(107, 107, 107, 0.3);
+
+        &::before {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid rgba(107, 107, 107, 0.3);
+            border-left: 2px solid rgba(107, 107, 107, 0.3);
+            content: "";
+        }
+        &::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-top: 2px solid rgba(107, 107, 107, 0.3);
+            border-right: 2px solid rgba(107, 107, 107, 0.3);
+            content: "";
+        }
+        .panel-foot {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            &::before {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 10px;
+                height: 10px;
+                border-bottom: 2px solid rgba(107, 107, 107, 0.3);
+                border-left: 2px solid rgba(107, 107, 107, 0.3);
+                content: "";
+            }
+            &::after {
+                position: absolute;
+                bottom: 0;
+                right: 0;
+                width: 10px;
+                height: 10px;
+                border-bottom: 2px solid rgba(107, 107, 107, 0.3);
+                border-right: 2px solid rgba(107, 107, 107, 0.3);
+                content: "";
+            }
+        }
+        h2 {
+            height: .57rem;
+            color: white;
+            line-height: .57rem;
+            text-align: center;
+            font-size: .1875rem;
+            font-weight: 300;
+            font-style: normal;
+        }
+        #map {
+            position:relative;
+            width: 100%;
+            height: 100%;
+            //border-radius: .125rem;
+            //border: 1px solid lightsteelblue;
+        
+        }
+        .map-overlay {
+            position: absolute;
+            bottom: .0625rem;
+            right: .0625rem;
+            background: #fff;
+            margin-right: .25rem;
+            font-family: Arial, sans-serif;
+            font-size:x-small;
+            overflow: auto;
+            border-radius: 3px;
+        }
+        #legend {
+            padding: 10px;
+            box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+            line-height: 18px;
+            height: 1.5rem;
+            margin-bottom: 40px;
+            width: 3.9rem;
+          }
+        .mapboxgl-popup-content {
+            position: relative;
+            border-radius: 3px;
+            opacity: 0.8;
+            background: rgb(93, 49, 102);
+            color: rgb(255, 255, 255);
+            max-width: 500px;
+            font: 10px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+            padding: 10px 10px 15px;
+            margin-left: 5px;
+        }
+    }
+    
+}
