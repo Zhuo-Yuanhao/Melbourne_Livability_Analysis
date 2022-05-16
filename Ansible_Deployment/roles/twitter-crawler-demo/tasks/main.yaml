@@ -3,9 +3,9 @@
 - name: use Dockerfile to build image
   docker_image:
     build:
-      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/Crawler/'
+      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/demo_harvest/'
       pull: yes
-    name: tweets-crawler-docker
+    name: tweets-crawler-docker-demo
     tag: latest
     source: build
   become: yes
@@ -15,15 +15,15 @@
 - name: Stop tweet-crawler Docker container
   become: yes
   docker_container:
-    name: tweet-crawler
+    name: tweet-crawler-demo
     state: absent
 
   # Create new docker container for tweet-crawler and start container
 - name: create and start Twitter Crawler Docker container
   become: yes
   docker_container:
-    name: twitter-harvester
-    image: tweets-crawler-docker
+    name: twitter-harvester-demo
+    image: tweets-crawler-docker-demo
     state: started
     pull: false
     recreate: true

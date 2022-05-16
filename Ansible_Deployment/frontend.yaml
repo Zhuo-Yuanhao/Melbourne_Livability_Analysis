@@ -1,5 +1,5 @@
 ---
-- hosts: instance
+- hosts: instance1-frontend
   vars_files:
     - host_vars/couchdb.yaml
   gather_facts: true
@@ -9,5 +9,9 @@
     - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
   roles:
-    - role: clone_gitrepo
+    # - role: common
+    # - role: docker
+    # - role: volumes
+    # - role: clone_gitrepo
     - role: git-pull
+    - role: frontend
