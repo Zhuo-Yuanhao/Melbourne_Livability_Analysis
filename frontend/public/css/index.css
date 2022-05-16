@@ -207,7 +207,7 @@ footer p a {
   background: #fff;
   margin-right: 0.25rem;
   font-family: Arial, sans-serif;
-  font-size: x-small;
+  font-size: small;
   overflow: auto;
   border-radius: 3px;
 }
@@ -217,7 +217,7 @@ footer p a {
   line-height: 18px;
   height: 1.5rem;
   margin-bottom: 40px;
-  width: 3.9rem;
+  width: 2.8rem;
 }
 .mainbox .panelMap .mapboxgl-popup-content {
   position: relative;
