@@ -44,11 +44,11 @@ Demo video for the introduction of models, scenarios, and Demo on preprocessing 
   
   * https://www.youtube.com/watch?v=yIrU9tkz45k
 
-Demo video for xxxxxxx
-  * 改
+Demo video for the frontend
+  * https://www.youtube.com/watch?v=REwNQ-jyZQ4
 
 ## Web page
-  * 改
+  * http://172.26.129.131:8080/
   
 ## Repository Structure
 ```
