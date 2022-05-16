@@ -12,7 +12,7 @@
     mode: 0600
 
 # add GitHub private key
-- name: add GitHub key to instancer
+- name: add GitHub key to instance
   template:
     src: "configure/configure_ssh"
     dest: /home/ubuntu/.ssh/config

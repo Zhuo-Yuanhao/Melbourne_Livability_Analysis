@@ -8,9 +8,9 @@
     - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
   roles:
-    # - role: common
-    # - role: docker
-    # - role: volumes
+    - role: common
+    - role: docker
+    - role: volumes
     - role: installDB
 
 - hosts: DockerDB:!Masternode # install couchdb and docker

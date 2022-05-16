@@ -1,0 +1,24 @@
+---
+# Build Docker image for frontend
+- name: use Dockerfile to build image
+  docker_image:
+    build:
+      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/frontend/'
+      pull: yes
+    name: frontend-docker
+    tag: latest
+    source: build
+  become: yes
+  environment: "{{ proxy_env }}"
+
+  # Create new docker container for frontend and start container
+- name: create and start the docker for frontend
+  become: yes
+  docker_container:
+    name: frontend
+    image: frontend-docker
+    state: started
+    ports: 
+      "8888:8888"
+    pull: false
+    recreate: true
