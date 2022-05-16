@@ -17,7 +17,7 @@ const couch = new NodeCouchDB({
 });
 
 const app = express();
-const port = 8888;
+const port = 8080;
 
 // to get the static files in 'public'
 app.use(express.static(__dirname + '/public'));
@@ -62,5 +62,5 @@ app.get('/', async function(req, res){
 });
 
 app.listen(port, function(){
-    console.log('Listening On Port 8888...');
+    console.log('Listening On Port 8080...');
 });
