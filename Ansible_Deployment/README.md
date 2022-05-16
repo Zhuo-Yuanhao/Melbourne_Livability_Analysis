@@ -8,7 +8,8 @@
 –	availability_zone: melbourne-qh2-uom
 –	instance_image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999
 –	instance_key_name: CCC-T43-A2 
-–	instance_flavor: uom.mse.2c9g 
+–	instance_flavor: uom.mse.2c9g
+
 ## User Guide
 1. Connect to VPN(Cisoco)
 2. For create instances on MRC: RUN ‘run-nectar.sh’
