@@ -43,22 +43,19 @@ Demo video for the introduction of models, scenarios, and Demo on preprocessing 
 Demo video for xxxxxxx
   * 改
 
-## Report
-  * 改
-
 ## Web page
   * 改
   
 ## Repository Structure
 ```
 | /AURIN 
-      - 改
+      - AURIN data processing and geojson creation
   /Ansible_Deployment
       - ansible scripts
   /crawler
       - twitter harvest
   /MapReduce 
-      - 改
+      - CouchDBMapReduce
   /frontend
       - frontend application
   /demo_harvest_for_video
