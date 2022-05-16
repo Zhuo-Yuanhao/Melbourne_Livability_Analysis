@@ -1,7 +1,4 @@
 # CCC2022S1A2-group43
-This repository contains the source code for assignment 2 of the COMP90024 Cluster and Cloud Computing course at the University of Melbourne.
-
-The system can be accessed via the following URL: 
 
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -30,6 +27,13 @@ The system can be accessed via the following URL:
 </table>
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
+
+This repository contains the source code for assignment 2 of the COMP90024 Cluster and Cloud Computing course at the University of Melbourne.
+
+The system can be accessed via the following URL: 
 
 ## YouTube Link
 Demo video for cloud deployment of harvests on different instances
