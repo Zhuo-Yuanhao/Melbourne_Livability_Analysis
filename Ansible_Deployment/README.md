@@ -7,11 +7,8 @@
 3.	Get information to set instance:
 
 –	availability_zone: melbourne-qh2-uom
-
 –	instance_image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999
-
 –	instance_key_name: CCC-T43-A2 
-
 –	instance_flavor: uom.mse.2c9g
 
 
