@@ -3,7 +3,7 @@
 - name: use Dockerfile to build image
   docker_image:
     build:
-      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/demo_harvest/'
+      path: '/home/ubuntu/CCCA2/CCC2022S1A2-group43/demo_harvest_for_video/'
       pull: yes
     name: tweets-crawler-docker-demo
     tag: latest

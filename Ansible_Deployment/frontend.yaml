@@ -9,9 +9,9 @@
     - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
   roles:
-    # - role: common
-    # - role: docker
-    # - role: volumes
-    # - role: clone_gitrepo
+    - role: common
+    - role: docker
+    - role: volumes
+    - role: clone_gitrepo
     - role: git-pull
     - role: frontend

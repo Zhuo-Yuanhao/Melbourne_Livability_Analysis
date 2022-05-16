@@ -19,6 +19,6 @@
     image: frontend-docker
     state: started
     ports: 
-      "8888:8888"
+      "8080:8080"
     pull: false
     recreate: true
