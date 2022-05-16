@@ -10,8 +10,8 @@
 
   roles:
     - role: common
-    - role: docker
+    - role: docker # install docker for frontend instance
     - role: volumes
-    - role: clone_gitrepo
+    - role: clone_gitrepo # clone all codes from GitHub
     - role: git-pull
-    - role: frontend
+    - role: frontend  # use Docker container to run frontend code

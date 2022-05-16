@@ -1,5 +1,5 @@
 ---
-- hosts: instance
+- hosts: instance # clone the github repo to every instances
   vars_files:
     - host_vars/couchdb.yaml
   gather_facts: true

@@ -1,4 +1,4 @@
-- hosts: DockerDB
+- hosts: DockerDB # install couchdb and docker on 3 instance execpt frontend instance
   vars_files:
     - host_vars/couchdb.yaml
   gather_facts: true
@@ -13,7 +13,7 @@
     - role: volumes
     - role: installDB
 
-- hosts: DockerDB:!Masternode # install couchdb and docker
+- hosts: DockerDB:!Masternode # set up couchDB cluster execpt masternode and frontend
   vars_files:
     - host_vars/couchdb.yaml
   gather_facts: true

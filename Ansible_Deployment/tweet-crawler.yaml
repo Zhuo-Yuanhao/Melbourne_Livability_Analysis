@@ -1,5 +1,5 @@
 ---
-- hosts: instance3-data
+- hosts: instance3-data # on Data instance run twitter crawler
   vars_files:
     - host_vars/couchdb.yaml
   gather_facts: true
@@ -9,5 +9,5 @@
     - ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
 
   roles:
-    - role: git-pull
+    - role: git-pull # make sure instance have the latest code version
     - role: twitter-crawler 
