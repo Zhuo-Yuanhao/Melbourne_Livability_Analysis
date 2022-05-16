@@ -156,7 +156,6 @@
                 return value_array;
             }
 
-            // ===============================================
             //get view scenario4 for current tweet analysis for each suburb in VIC
             async function getOotS4ForEachSub(dataset) {
                 const value_array = [];
@@ -287,36 +286,46 @@
                 const pos_arr = threeArr[2];
 
                 
-                // view scenario2.2
-                const s22_value_adl = await getS22ForEachCity(data.scenario22, 'Adelaide');
-                const s22_value_bris = await getS22ForEachCity(data.scenario22, 'Brisbane');
-                const s22_value_melb = await getS22ForEachCity(data.scenario22, 'Melbourne');
-                const s22_value_syd = await getS22ForEachCity(data.scenario22, 'Sydney');
+                // get data from view scenario2.2
+                const s22_adl_json = await getS22ForEachCity(data.scenario22, 'Adelaide');
+                
+                const s22_bris_json = await getS22ForEachCity(data.scenario22, 'Brisbane');
+              
+                const s22_melb_json = await getS22ForEachCity(data.scenario22, 'Melbourne');
+              
+                const s22_syd_json = await getS22ForEachCity(data.scenario22, 'Sydney');
+                
+                // to separate labels and value of the data
+                const s22_dt_label = [];
+                Object.keys(s22_adl_json).forEach((key) => {
+                    s22_dt_label.push(key);
+                });
+                console.log(s22_dt_label);
+                
+                // to put values into array according to different cities
+                const s22_adl_value = [];
+                Object.keys(s22_adl_json).forEach((key) => {
+                    s22_adl_value.push(s22_adl_json[key]);
+                });
+                console.log('#', s22_adl_value);
 
-                const s22_label = [];
-                Object.keys(s22_value_adl).forEach((key) => {
-                    s22_label.push(key);
+                const s22_bris_value = [];
+                Object.keys(s22_bris_json).forEach((key) => {
+                    s22_bris_value.push(s22_bris_json[key]);
                 });
 
-                const s22_adl = [];
-                Object.keys(s22_value_adl).forEach((key) => {
-                    s22_adl.push(s22_value_adl[key]);
+                const s22_melb_value = [];
+                Object.keys(s22_melb_json).forEach((key) => {
+                    s22_melb_value.push(s22_melb_json[key]);
                 });
 
-                const s22_bris = [];
-                Object.keys(s22_value_bris).forEach((key) => {
-                    s22_bris.push(s22_value_bris[key]);
+                const s22_syd_value = [];
+                Object.keys(s22_syd_json).forEach((key) => {
+                    s22_syd_value.push(s22_syd_json[key]);
                 });
 
-                const s22_melb = [];
-                Object.keys(s22_value_melb).forEach((key) => {
-                    s22_melb.push(s22_value_melb[key]);
-                });
+                //for (i=0; i<s22)
 
-                const s22_syd = [];
-                Object.keys(s22_value_syd).forEach((key) => {
-                    s22_syd.push(s22_value_syd[key]);
-                });
 
                 // get data from view scenario2.1
                 const s21_value = await getS21orS5Value(data.scenario21);
@@ -736,7 +745,7 @@
         (function() {
             var myChart = echarts.init(document.querySelector('.line-r .chart'));
             var option = {
-                color: ['#256174', '#3292b8', '#6eb496', '#9698ed'],
+                color: ['#d78f50', '#3292b8', '#cc220f', '#9698ed'],
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -744,33 +753,33 @@
                     }
                 },
                 legend: {
-                    align: 'left',
-                    orient: 'horizontal',
-                    top: '2%',
-                    type: 'scroll',
-                    pageIconSize: 10,
                     textStyle: {
-                        color: '#fff',
-                        fontSize: 10
+                        color: '#fff'
                     },
-                    icon: 'pin'
+                    icon: 'pin',
+                    itemWidth: 20,
+                    itemStyle: {
+                        opacity: 0.8
+                    }
                 },
                 grid: {
-                    left: '3%',
+                    top: '15%',
+                    left: '2%',
                     right: '4%',
                     bottom: '3%',
-                    top: '20%',
+                    show: true,
+                    borderColor: '#fff',
                     containLabel: true
                 },
                 xAxis: {
                     type: 'category',
                     boundaryGap: false,
-                    data: s22_label,
+                    data: s22_dt_label,
                     axisTick: {
                         show: false
                     },
                     axisLabel: {
-                        color: "#fff"
+                        color: '#fff'
                     },
                     axisLine: {
                         show: false
@@ -778,45 +787,55 @@
                 },
                 yAxis: {
                     type: 'value',
-                    axisLabel: {
-                        color: "#fff"
+                    axisTick: {
+                        show: false
                     },
+                    axisLabel: {
+                        color: '#fff'
+                    },
+                    axisLine: {
+                        show: false
+                    },
+                    splitLine: {
+                        lineStyle: {
+                            color: 'rgba(107, 107, 107, 0.3)'
+                        }
+                    },
+                    scale: true
                 },
                 series: [
                     {
-                        name: 'Adelaide',
-                        type: 'line',
-                        stack: 'Total',
-                        data: s22_adl
+                    name: 'Adelaide',
+                    type: 'line',
+                    data: s22_adl_value,
+                    smooth: true
                     },
                     {
-                        name: 'Brisbane',
-                        type: 'line',
-                        stack: 'Total',
-                        data: s22_bris
+                    name: 'Brisbane',
+                    type: 'line',
+                    data: s22_bris_value,
+                    smooth: true
                     },
                     {
-                        name: 'Melbourne',
-                        type: 'line',
-                        stack: 'Total',
-                        data: s22_melb
+                    name: 'Melbourne',
+                    type: 'line',
+                    data: s22_melb_value,
+                    smooth: true
                     },
                     {
-                        name: 'Sydney',
-                        type: 'line',
-                        stack: 'Total',
-                        data: s22_syd
-                    },
+                    name: 'Sydney',
+                    type: 'line',
+                    data: s22_syd_value,
+                    smooth: true
+                    }
                 ]
-            };
+                };
             // assign options for an object
             myChart.setOption(option);
             window.addEventListener('resize', function(){
                 myChart.resize();
             });
         })();
-
-
     };
 
         display(label_scenario, label_scenario_detail);
