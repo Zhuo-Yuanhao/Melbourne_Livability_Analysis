@@ -5,11 +5,10 @@
 2. Reset API password
 <img width="908" alt="image" src="https://user-images.githubusercontent.com/81127118/168543936-47bb07c8-74af-44a5-ac50-68505e495721.png">
 3.	Get information to set instance:
-
-–	availability_zone: melbourne-qh2-uom
-–	instance_image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999
-–	instance_key_name: CCC-T43-A2 
-–	instance_flavor: uom.mse.2c9g
+–	```availability_zone: melbourne-qh2-uom```
+–	```instance_image: 356ff1ed-5960-4ac2-96a1-0c0198e6a999```
+–	```instance_key_name: CCC-T43-A2``` 
+–	```instance_flavor: uom.mse.2c9g```
 
 
 ## User Guide
