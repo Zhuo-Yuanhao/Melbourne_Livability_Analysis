@@ -8,3 +8,5 @@ couchdb_address.py: The information of couchDB used for the storage of tweets fr
 requirements.txt: The python packages needed to install
 
 clawler_new.py: The implement of collecting tweets includes data-preprocessing
+
+don't forget to change the #### in code with your own info
