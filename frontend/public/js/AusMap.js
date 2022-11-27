@@ -1,4 +1,4 @@
-mapboxgl.accessToken = 'pk.eyJ1IjoiY2hlcnlsLWNoZW5jY2MiLCJhIjoiY2wyZGJtaHk2MHhweDNjbzIyaWk2ODlqdCJ9.nSmaPBChoCWG7b-VQmpKsA';
+mapboxgl.accessToken = '########3';
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/cheryl-chenccc/cl35iody7000515qnukt0ecvf',
