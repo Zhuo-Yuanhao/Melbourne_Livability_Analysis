@@ -2,7 +2,7 @@ import tweepy
 from demo_harvest import *
 
 
-bearer_token = "AAAAAAAAAAAAAAAAAAAAAD1xbgEAAAAASXrPTL92IrSR%2FppXimNnPN5elyA%3DnT5A1poO57o16wYI1uWUlSoG4CAPBjDNvBuQahPP2tKYN1AB12"
+bearer_token = "###############"
 
 client = tweepy.Client(bearer_token)
 
